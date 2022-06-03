@@ -38,6 +38,6 @@ fn main() -> io::Result<()> {
         println!("Finish request!");
         Ok(())
     }
-    executor.block_on(connect)??;
+    executor.block_on(connect())??;
     Ok(())
 }

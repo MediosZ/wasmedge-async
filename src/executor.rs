@@ -198,15 +198,11 @@ impl Executor {
         }
     }
 
-    pub fn block_on<F, T, O>(&mut self, f: F) -> std::io::Result<O>
-    where
-        F: Fn() -> T,
-        T: Future<Output = O> + 'static,
-    {
+    pub fn block_on<F: Future>(&mut self, fut: F) -> std::io::Result<F::Output> {
+        let mut fut = fut;
         let waker = task::noop_waker();
         let mut cx = Context::from_waker(&waker);
         EXECUTOR.set(self, || {
-            let mut fut = f();
             let mut fut = unsafe { Pin::new_unchecked(&mut fut) };
             let ret = loop {
                 if let std::task::Poll::Ready(t) = fut.as_mut().poll(&mut cx) {

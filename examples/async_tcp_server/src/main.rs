@@ -23,6 +23,6 @@ async fn listener_test() -> io::Result<()> {
 
 fn main() -> io::Result<()> {
     let mut executor = Executor::new();
-    executor.block_on(listener_test)??;
+    executor.block_on(listener_test())??;
     Ok(())
 }
